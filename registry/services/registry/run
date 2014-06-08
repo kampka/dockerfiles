@@ -1,0 +1,7 @@
+#!/bin/bash
+
+export SETTINGS_FLAVOR=local
+export STORAGE_PATH=/data/registry/storage
+export DOCKER_REGISTRY_CONFIG=/data/registry/config.yml
+
+exec docker-registry
