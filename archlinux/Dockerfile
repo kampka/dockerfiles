@@ -6,5 +6,5 @@ ADD . /build
 
 RUN sh /build/setup.sh
 
-ENTRYPOINT ["/usr/local/bin/init"]
+ENTRYPOINT ["/usr/bin/minit"]
 CMD ["/usr/bin/runsvdir", "-P", "/services"]

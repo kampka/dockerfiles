@@ -1,35 +1,29 @@
 #!/bin/sh
 
 sed -i "s/^CheckSpace/#CheckSpace/g" /etc/pacman.conf
-pacman -Sy -qq > /dev/null
-pacman -S base-devel --noconfirm > /dev/null
-pacman -S clang vim --noconfirm > /dev/null
+cat >>/etc/pacman.conf<< EOF
+[kampka]
+Server = http://pkg.kampka.net
+SigLevel = Required
+EOF
 
-# Compile the init entrypoint
-clang -w -o /usr/local/bin/init /build/src/init.c
+cp -v /build/pacman.d/kampka.repository /etc/pacman.d
+pacman-key -a /build/pacman.d/kampka.db.key
+pacman-key --lsign 10C65A0F
+pacman -Sy -qq > /dev/null
+pacman -S --noconfirm base-devel >/dev/null
+
+pacman -S --noconfirm yaourt pacaur micro-init runit >/dev/null
 
 mkdir -p /etc/initrc.d
 cp -v /build/initrc.d/* /etc/initrc.d/
 
+yaourt -Syu --noconfirm 
 
-BUILDDIR=$(mktemp -d)
-cd $BUILDDIR
-for f in /build/aur/*; do
-	makepkg --asroot -c -f -s -i --noconfirm -p $f > /dev/null
-done
-
-cd
-rm -rf $BUILDDIR
-
-ln -s /proc/self/fd /dev/fd
-
-yaourt -Syu --noconfirm > /dev/null
-yaourt -Sy runit --noconfirm > /dev/null
+ln -s /proc/self/fd /dev
 
 mkdir /services
 
-
-yaourt -S -cc --noconfirm > /dev/null
 rm -rf /var/cache/pacman/pkg/*
 rm -rf /build
 
