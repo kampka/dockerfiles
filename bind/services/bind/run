@@ -1,0 +1,15 @@
+#!/bin/bash
+
+mkdir -m 0775 -p /run/named
+chown root:named /run/named
+
+mkdir -p /data/log
+chown -R root:named /data/log
+
+mkdir -p /data/bind
+chown -R root:named /data/bind
+
+mkdir -p /data/zones
+chown -R root:named /data/zones
+
+exec /usr/sbin/named -u named -g -4 -c /data/bind/named.conf
