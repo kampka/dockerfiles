@@ -12,4 +12,5 @@ chown -R root:named /data/bind
 mkdir -p /data/zones
 chown -R root:named /data/zones
 
-exec /usr/sbin/named -u named -g -4 -c /data/bind/named.conf
+exec 2>&1 \
+  /usr/sbin/named -u named -g -4 -c /data/bind/named.conf
