@@ -6,8 +6,4 @@ RUN sh /build/setup.sh
 
 ADD ./services /services
 
-VOLUME ["/data/registry/storage"]
-
-ADD ./data /data
-
-
+VOLUME ["/data"]

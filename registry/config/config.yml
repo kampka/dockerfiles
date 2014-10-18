@@ -1,5 +1,8 @@
-common:
+common: &common
   loglevel: info
-  storage: local
+  storage: file
   storage_path: /data/registry/storage
   standalone: true
+
+local:
+  <<: *common

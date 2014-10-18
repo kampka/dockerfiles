@@ -1,7 +1,15 @@
 #!/bin/bash
 
+CONFIG_FILE=/etc/config.yml
+[ -e /data/config.yml ] && CONFIG_FILE=/etc/config.yml
+[ -e /data/registry/config.yml ] && CONFIG_FILE=/etc/registry/config.yml
+
+
 export SETTINGS_FLAVOR=local
 export STORAGE_PATH=/data/registry/storage
-export DOCKER_REGISTRY_CONFIG=/data/registry/config.yml
+export DOCKER_REGISTRY_CONFIG=${CONFIG_FILE:-/etc/config.yml}
 
+[ ! -d "$STORAGE_PATH" ] && mkdir -p "$STORAGE_PATH"
+
+exec 2>&1
 exec docker-registry
