@@ -1,0 +1,10 @@
+#!/bin/bash
+
+export STORAGE_PATH=/data/storage
+export REDIS_CONF_EXTRAS=/data/redis.conf
+
+[ ! -e "$REDIS_CONF_EXTRAS" ] && touch "$REDIS_CONF_EXTRAS"
+[ ! -d "$STORAGE_PATH" ] && mkdir -p "$STORAGE_PATH"
+
+exec 2>&1
+exec /usr/bin/redis-server
