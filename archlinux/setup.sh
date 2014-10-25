@@ -20,7 +20,7 @@ cp -v /build/initrc.d/* /etc/initrc.d/
 
 yaourt -Syu --noconfirm 
 
-ln -s /proc/self/fd /dev
+[ ! -e /dev/fd ] && ln -s /proc/self/fd /dev
 
 mkdir /services
 
