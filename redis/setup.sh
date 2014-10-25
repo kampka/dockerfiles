@@ -1,4 +1,5 @@
 #!/bin/sh
+set -e
 
 ln -sf /proc/self/fd /dev
 
