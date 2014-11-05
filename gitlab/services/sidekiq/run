@@ -1,0 +1,18 @@
+#!/bin/sh
+
+cd /usr/share/webapps/gitlab
+
+SIDEKIQ_CONCURRENCY=${SIDEKIQ_CONCURRENCY:-25}
+RAILS_ENV=production
+export RAILS_ENV
+
+exec 2>&1 \
+  sudo -u gitlab -H bundle exec sidekiq -e production \
+    -q post_receive \
+    -q mailer \
+    -q system_hook \
+    -q project_web_hook \
+    -q gitlab_shell \
+    -q common \
+    -q default \
+    -q $SIDEKIQ_CONCURRENCY

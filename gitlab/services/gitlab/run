@@ -1,0 +1,9 @@
+#!/bin/bash
+
+RAILS_ENV=production
+export RAILS_ENV
+
+cd /usr/share/webapps/gitlab
+
+exec 2>&1 \
+ sudo -u gitlab -H bundle exec unicorn_rails -E production -c /usr/share/webapps/gitlab/config/unicorn.rb -p 8080

@@ -1,0 +1,12 @@
+#
+# PRODUCTION
+#
+production:
+  adapter: postgresql
+  encoding: {{POSTGRES_DATABASE_ENCODING}}
+  database: {{POSTGRES_DATABASE_NAME}}
+  pool: {{POSTGRES_DATABASE_POOL}}
+  username: {{POSTGRES_DATABASE_USER}}
+  password: {{POSTGRES_DATABASE_PASSWORD}}
+  host: {{POSTGRES_DATABASE_HOST}}
+  port: {{POSTGRES_DATABASE_PORT}}
