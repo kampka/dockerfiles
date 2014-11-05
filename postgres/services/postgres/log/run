@@ -1,3 +1,8 @@
 #!/bin/sh
+
+LOGDIR=${LOGDIR:-/data/log}
+
+[ -d "$LOGDIR" ] || mkdir -p "$LOGDIR"
+
 exec 2>&1
-exec /usr/bin/svlogd -ttt /data/log
+exec /usr/bin/svlogd -ttt "$LOGDIR"

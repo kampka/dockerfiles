@@ -1,9 +1,7 @@
 #!/bin/bash
 
-LOGDIR=/data/log
-PGDATA=/data/pgdata
+PGDATA=${PGDATA:-/data/pgdata}
 
-mkdir -p "$LOGDIR"
 mkdir -p "$PGDATA"
 
 chown -R postgres "$PGDATA"
