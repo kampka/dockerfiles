@@ -1,6 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
-chown -R www-data:www-data /data/www
-chown -R www-data:www-data /data/log
-
-/usr/bin/nginx 2>&1
+exec 2>&1 \
+  /usr/bin/nginx

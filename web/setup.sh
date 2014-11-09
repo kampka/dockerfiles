@@ -8,6 +8,7 @@ pacman -Sy --noconfirm nginx
 mkdir -p /etc/nginx/conf.d
 mkdir -p /etc/nginx/sites.d
 
+cp -rv /build/initrc.d /etc
 cp -v /build/nginx.conf /etc/nginx
 
 useradd -M --system -d /data/www www-data
