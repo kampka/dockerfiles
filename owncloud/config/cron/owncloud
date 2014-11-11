@@ -1,0 +1,2 @@
+# Run onwlcoud maintenance jobs
+*/15 * * * * /usr/bin/php -f /usr/share/webapps/owncloud/cron.php
