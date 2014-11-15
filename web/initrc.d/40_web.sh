@@ -6,3 +6,6 @@ mkdir -p /data/nginx
 
 chown -R www-data:www-data /data/www
 chown -R www-data:www-data /data/log/nginx
+
+mknod /tmp/nginx.access p
+mknod /tmp/nginx.error p

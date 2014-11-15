@@ -9,7 +9,8 @@ mkdir -p /etc/nginx/conf.d
 mkdir -p /etc/nginx/sites.d
 
 cp -rv /build/initrc.d /etc
-cp -v /build/nginx.conf /etc/nginx
+cp -rv /build/config/nginx /etc
+cp -v /build/bin/logger /usr/local/bin/logger
 
 useradd -M --system -d /data/www www-data
 

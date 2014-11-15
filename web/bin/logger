@@ -1,0 +1,32 @@
+#!/bin/bash
+
+log() {
+  while read line <$1
+  do
+    [ -n "$line" ] && echo "$line"
+  done
+}
+
+usage() {
+  echo "$0 <pipe>"
+  echo "  Reads log lines from a named pipe and prints them to stdout"
+  echo ""
+  echo "  --help          : Print this message an exit"
+}
+
+case $1 in
+  -h|--help|-?)
+    usage
+    exit 0
+    ;;
+  *)
+    PIPE="$1"
+    [ ! -p "$PIPE" ] && {
+      echo "Argument '$1' is not a valid pipe or does not exist." 1>&2
+      exit 1
+    }
+    log "$PIPE"
+    ;;
+esac
+
+exit 0

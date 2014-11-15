@@ -1,4 +1,7 @@
 #!/bin/sh
 
+/usr/local/bin/logger /tmp/nginx.access &
+/usr/local/bin/logger /tmp/nginx.error &
+
 exec 2>&1 \
   /usr/bin/nginx
