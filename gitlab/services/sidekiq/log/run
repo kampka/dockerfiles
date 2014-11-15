@@ -1,7 +1,0 @@
-#!/bin/sh
-SIDEKIQ_LOG_DIR=${SIDEKIQ_LOG_DIR:-/data/log/sidekiq}
-
-[ ! -d "$SIDEKIQ_LOG_DIR" ] && mkdir -p "$SIDEKIQ_LOG_DIR"
-
-exec 2>&1
-exec /usr/bin/svlogd -ttt "$SIDEKIQ_LOG_DIR"

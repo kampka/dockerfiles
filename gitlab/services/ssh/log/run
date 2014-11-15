@@ -1,8 +1,0 @@
-#!/bin/sh
-
-SSH_LOG_DIR=${SSH_LOG_DIR:-/data/log/ssh}
-
-[ ! -d "$SSH_LOG_DIR" ] && mkdir -p "$SSH_LOG_DIR"
-
-exec 2>&1
-exec /usr/bin/svlogd -ttt "$SSH_LOG_DIR"

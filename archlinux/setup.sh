@@ -16,7 +16,8 @@ pacman -S --noconfirm base-devel >/dev/null
 pacman -S --noconfirm yaourt pacaur micro-init runit >/dev/null
 
 mkdir -p /etc/initrc.d
-cp -v /build/initrc.d/* /etc/initrc.d/
+cp -vr /build/initrc.d/* /etc/initrc.d/
+cp -vr /build/config/* /etc
 
 yaourt -Syu --noconfirm 
 

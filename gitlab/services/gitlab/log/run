@@ -1,8 +1,0 @@
-#!/bin/sh
-
-GITLAB_LOG_DIR=${GITLAB_LOG_DIR:-/data/log/gitlab}
-
-[ ! -d "$GITLAB_LOG_DIR" ] && mkdir -p "$GITLAB_LOG_DIR"
-
-exec 2>&1
-exec /usr/bin/svlogd -ttt "$GITLAB_LOG_DIR"

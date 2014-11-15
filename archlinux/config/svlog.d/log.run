@@ -1,0 +1,31 @@
+#!/bin/bash
+
+set -e
+
+if [ $0 != "./run" ];then
+  echo "This script meant to be linked as ./run in a service/log directory only!"
+  exit 1
+fi
+CURRENTDIR=$(pwd)
+BASEDIR=$(basename $CURRENTDIR)
+if [ "$BASEDIR" != "log" ];then
+  echo "This script meant to be run from a service/log directory only!"
+  exit 1
+fi
+
+[ -e /etc/log.conf ] && . /etc/log.conf
+[ -e "$CURRENTDIR/log.conf" ] && . "$CURRENTDIR/log.conf"
+
+LOGDIR_BASE=${LOGDIR_BASE:-/data/log}
+SERVICENAME=$(basename $(dirname $CURRENTDIR)) 
+SERVICENAME_UPPER=$(echo $SERVICENAME | awk '{print toupper($0)}')
+
+SERVICENAME_LOG_DIR="${SERVICENAME_UPPER}_LOG_DIR"
+LOG_DIR=${!SERVICENAME_LOG_DIR:-${LOGDIR_BASE}/$SERVICENAME}
+
+[ -d "$LOG_DIR" ] || mkdir -p "$LOG_DIR"
+
+exec 2>&1
+exec svlogd -ttt "$LOG_DIR"
+
+

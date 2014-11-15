@@ -1,7 +1,0 @@
-#!/bin/sh
-LOG_DIR=/data/log
-[ ! -d "$LOG_DIR" ] && mkdir -p "$LOG_DIR"
-chmod 755 "$LOG_DIR"
-
-exec 2>&1
-exec /usr/bin/svlogd -ttt "$LOG_DIR"

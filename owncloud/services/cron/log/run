@@ -1,9 +1,0 @@
-#!/bin/sh
-
-OWNCLOUD_DATA_DIR=${OWNCLOUD_DATA_DIR:-/data}
-LOG_DIR="${OWNCLOUD_DATA_DIR}/log/cron"
-
-mkdir -p "$LOG_DIR"
-
-exec 2>&1
-exec /usr/bin/svlogd -ttt "$LOG_DIR"
