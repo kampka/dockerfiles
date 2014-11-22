@@ -1,4 +1,4 @@
 #!/bin/sh
 
 exec 2>&1
-exec /usr/bin/php-fpm --nodaemonize --pid /run/php-fpm.pid
+exec /usr/bin/php-fpm --force-stderr --nodaemonize --pid /run/php-fpm.pid

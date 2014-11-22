@@ -52,7 +52,7 @@ OWNCLOUD_UPDATE_CHECKER=${OWNCLOUD_UPDATE_CHECKER:-true}
 OWNCLOUD_HAS_INTERNET=${OWNCLOUD_HAS_INTERNET:-true}
 OWNCLOUD_CHECK_WEBDAV=${OWNCLOUD_CHECK_WEBDAV:-true}
 OWNCLOUD_CHECK_HTACCESS=${OWNCLOUD_CHECK_HTACCESS:-true}
-OWNCLOUD_LOG_TYPE=${OWNCLOUD_LOG_TYPE:-owncloud}
+OWNCLOUD_LOG_TYPE=${OWNCLOUD_LOG_TYPE:-errorlog}
 OWNCLOUD_LOG_FILE=${OWNCLOUD_LOG_FILE:-${OWNCLOUD_DATA_DIR}/log/owncloud/owncloud.log}
 OWNCLOUD_LOG_LEVEL=${OWNCLOUD_LOG_LEVEL:-1}
 OWNCLOUD_LOG_TIMEZONE=${OWNCLOUD_LOG_TIMEZONE:-UTC}
@@ -76,8 +76,8 @@ mkdir -p ${OWNCLOUD_DATA_DIR}/storage
 touch ${OWNCLOUD_DATA_DIR}/storage/.ocdata
 chown -R www-data:www-data ${OWNCLOUD_DATA_DIR}/storage
 
-mkdir -p ${OWNCLOUD_DATA_DIR}/log/{owncloud,php,cron}
-chown -R www-data:www-data ${OWNCLOUD_DATA_DIR}/log/{owncloud,php}
+mkdir -p ${OWNCLOUD_DATA_DIR}/log/{owncloud,cron}
+chown -R www-data:www-data ${OWNCLOUD_DATA_DIR}/log/owncloud
 
 mkdir -p ${OWNCLOUD_DATA_DIR}/config
 chown -R www-data:www-data ${OWNCLOUD_DATA_DIR}/config
@@ -151,7 +151,7 @@ EOF
 
   # Set background job mode to cron
   QUERY="INSERT INTO appconfig (appid, configkey, configvalue) VALUES ('core', 'backgroundjobs_mode', 'cron');"
-  psql -h $OWNCLOUD_DB_HOST -U $OWNCLOUD_DB_USER -d $OWNCLOUD_DB_NAME -Atw -c "SELECT * from appconfig;"
+  psql -h $OWNCLOUD_DB_HOST -U $OWNCLOUD_DB_USER -d $OWNCLOUD_DB_NAME -Atw -c "$QUERY"
 
 fi
 

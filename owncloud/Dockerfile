@@ -7,7 +7,3 @@ RUN sh /build/setup.sh
 ADD ./services /services
 
 VOLUME ["/data"]
-
-ADD ./data /data
-
-
