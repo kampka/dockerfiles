@@ -1,0 +1,6 @@
+#!/bin/sh
+
+BITLBEE_CONF=${BITLBEE_CONF:-/etc/bitlbee/bitlbee.conf}
+
+exec 2>&1 \
+ chpst -u bitlbee:bitlbee /usr/bin/bitlbee -n -F -c ${BITLBEE_CONF}

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+[ -e /etc/znc.conf ] && . /etc/znc.conf
+
+ZNC_DATA_DIR=${ZNC_DATA_DIR:-/data/znc}
+
+[ -e "${ZNC_DATA_DIR}/znc.conf" ] && . "${ZNC_DATA_DIR}/znc.conf"
+
+exec 2>&1 \
+  chpst -u znc:znc /usr/bin/znc -f -n --datadir ${ZNC_DATA_DIR}
