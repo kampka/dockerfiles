@@ -57,31 +57,47 @@ GITLAB_SMTP_ENABLED=${GITLAB_SMTP_ENABLED:-false}
 
 echo "Setting up gitlab directories."
 chown gitlab:gitlab "$GITLAB_DATA_DIR"
-mkdir -vp ${GITLAB_DATA_DIR}/repositories
+mkdir -p ${GITLAB_DATA_DIR}/repositories
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/repositories
-mkdir -vp ${GITLAB_DATA_DIR}/backup
+mkdir -p ${GITLAB_DATA_DIR}/backup
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/backup
-mkdir -vp ${GITLAB_DATA_DIR}/satellites
+mkdir -p ${GITLAB_DATA_DIR}/satellites
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/satellites
-mkdir -vp ${GITLAB_DATA_DIR}/repositories
+mkdir -p ${GITLAB_DATA_DIR}/repositories
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/repositories
-mkdir -vp ${GITLAB_DATA_DIR}/uploads
-ln -sf ${GITLAB_DATA_DIR}/uploads /usr/share/webapps/gitlab/public/uploads
-chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/uploads
-mkdir -vp ${GITLAB_DATA_DIR}/tmp
-ln -sf ${GITLAB_DATA_DIR}/tmp /usr/share/webapps/gitlab/public/
-chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/tmp
-mkdir -vp ${GITLAB_DATA_DIR}/.ssh
-touch ${GITLAB_DATA_DIR}/.ssh/authorized_keys
-chmod 700 ${GITLAB_DATA_DIR}/.ssh
-chmod 600 ${GITLAB_DATA_DIR}/.ssh/authorized_keys
-chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/.ssh
-ln -sf ${GITLAB_DATA_DIR}/.ssh ${GITLAB_INSTALL_DIR}/.ssh
-mkdir -vp ${GITLAB_DATA_DIR}/log/unicorn
-mkdir -vp ${GITLAB_DATA_DIR}/log/gitlab/app
-mkdir -vp ${GITLAB_DATA_DIR}/log/gitlab-shell
+
+mkdir -p ${GITLAB_DATA_DIR}/gitlab
+mkdir -p ${GITLAB_DATA_DIR}/gitlab/uploads
+# Legacy folder setup migration
+[ -d $GITLAB_DATA_DIR/uploads ] && mv -f $GITLAB_DATA_DIR/uploads $GITLAB_DATA_DIR/gitlab/uploads
+ln -sf ${GITLAB_DATA_DIR}/gitlab/uploads /usr/share/webapps/gitlab/public/uploads
+
+mkdir -p ${GITLAB_DATA_DIR}/gitlab/assets
+# Legacy folder setup migration
+[ -d $GITLAB_DATA_DIR/assets ] && mv -f $GITLAB_DATA_DIR/assets $GITLAB_DATA_DIR/gitlab/assets
+ln -sf ${GITLAB_DATA_DIR}/gitlab/assets /usr/share/webapps/gitlab/public/assets
+
+mkdir -p ${GITLAB_DATA_DIR}/gitlab/tmp
+# Legacy folder setup migration
+[ -d $GITLAB_DATA_DIR/tmp ] && mv -f $GITLAB_DATA_DIR/tmp $GITLAB_DATA_DIR/gitlab/tmp
+ln -sf ${GITLAB_DATA_DIR}/gitlab/tmp /usr/share/webapps/gitlab/tmp
+chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/gitlab
+
+# Legacy folder setup migration
+[ -d ${GITLAB_DATA_DIR}/.ssh ] && [ ! -L ${GITLAB_DATA_DIR}/.ssh ] && mv ${GITLAB_DATA_DIR}/.ssh ${GITLAB_DATA_DIR}/gitlab/ssh
+
+mkdir -p ${GITLAB_DATA_DIR}/gitlab/ssh
+touch ${GITLAB_DATA_DIR}/gitlab/ssh/authorized_keys
+chmod 700 ${GITLAB_DATA_DIR}/gitlab/ssh
+chmod 600 ${GITLAB_DATA_DIR}/gitlab/ssh/authorized_keys
+chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/gitlab/ssh
+
+ln -sf ${GITLAB_DATA_DIR}/gitlab/ssh ${GITLAB_DATA_DIR}/.ssh
+ln -sf ${GITLAB_DATA_DIR}/gitlab/ssh ${GITLAB_INSTALL_DIR}/.ssh
+
+mkdir -p ${GITLAB_DATA_DIR}/log/gitlab
+mkdir -p ${GITLAB_DATA_DIR}/log/gitlab-shell
 rm -rf ${GITLAB_INSTALL_DIR}/log
-ln -sf ${GITLAB_DATA_DIR}/log/gitlab/app ${GITLAB_INSTALL_DIR}/log
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/log
 
 usermod -d ${GITLAB_DATA_DIR} gitlab
@@ -192,12 +208,10 @@ if [ "$CURRENT_VERSION" != "$INSTALLED_VERSION" ]; then
   sudo -u gitlab -H bundle exec rake gitlab:backup:create RAILS_ENV=production
   sudo -u gitlab -H bundle exec rake db:migrate RAILS_ENV=production
   
-  rm -rf "${GITLAB_DATA_DIR}/tmp"
-  mkdir -p "${GITLAB_DATA_DIR}/tmp"
-  mkdir -p "${GITLAB_DATA_DIR}/tmp/cache/"
-  mkdir -p "${GITLAB_DATA_DIR}/tmp/public/assets/"
-  chown -R gitlab:gitlab "${GITLAB_DATA_DIR}/tmp"
-  ln -sf "${GITLAB_DATA_DIR}/tmp" "${GITLAB_INSTALL_DIR}/tmp"
+  rm -rf "${GITLAB_DATA_DIR}/gitlab/tmp/*"
+  mkdir -p "${GITLAB_DATA_DIR}/gitlab/tmp/cache/"
+  mkdir -p "${GITLAB_DATA_DIR}/gitlab/tmp/public/assets/"
+  chown -R gitlab:gitlab "${GITLAB_DATA_DIR}/gitlab/tmp"
 
   sudo -u gitlab -H bundle exec rake assets:clean RAILS_ENV=production >/dev/null
   sudo -u gitlab -H bundle exec rake assets:precompile RAILS_ENV=production >/dev/null
