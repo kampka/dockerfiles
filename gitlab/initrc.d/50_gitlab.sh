@@ -70,17 +70,17 @@ mkdir -p ${GITLAB_DATA_DIR}/gitlab
 mkdir -p ${GITLAB_DATA_DIR}/gitlab/uploads
 # Legacy folder setup migration
 [ -d $GITLAB_DATA_DIR/uploads ] && mv -f $GITLAB_DATA_DIR/uploads $GITLAB_DATA_DIR/gitlab/
-ln -sf ${GITLAB_DATA_DIR}/gitlab/uploads /usr/share/webapps/gitlab/public/uploads
+ln -sf ${GITLAB_DATA_DIR}/gitlab/uploads /usr/share/webapps/gitlab/public
 
 mkdir -p ${GITLAB_DATA_DIR}/gitlab/assets
 # Legacy folder setup migration
 [ -d $GITLAB_DATA_DIR/assets ] && mv -f $GITLAB_DATA_DIR/assets $GITLAB_DATA_DIR/gitlab/
-ln -sf ${GITLAB_DATA_DIR}/gitlab/assets /usr/share/webapps/gitlab/public/assets
+ln -sf ${GITLAB_DATA_DIR}/gitlab/assets /usr/share/webapps/gitlab/public
 
 mkdir -p ${GITLAB_DATA_DIR}/gitlab/tmp
 # Legacy folder setup migration
 [ -d $GITLAB_DATA_DIR/tmp ] && mv -f $GITLAB_DATA_DIR/tmp $GITLAB_DATA_DIR/gitlab/
-ln -sf ${GITLAB_DATA_DIR}/gitlab/tmp /usr/share/webapps/gitlab/tmp
+ln -sf ${GITLAB_DATA_DIR}/gitlab/tmp /usr/share/webapps/gitlab
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/gitlab
 
 # Legacy folder setup migration
