@@ -4,7 +4,7 @@ set -e
 
 ln -sf /proc/self/fd /dev
 
-pacman -Sy --noconfirm postgresql 
+pacman -Sy --noconfirm postgresql postgresql-old-upgrade
 
 rm -rf /build
 

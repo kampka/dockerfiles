@@ -10,6 +10,4 @@ ADD ./services /services
 
 VOLUME ["/data"]
 
-ADD ./data /data
-
 EXPOSE 5432
