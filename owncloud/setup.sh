@@ -4,6 +4,7 @@ set -e
 
 ln -sf /proc/self/fd /dev
 
+pacman -Sy --noconfirm --asdeps --needed base-devel
 yaourt -Sy --noconfirm owncloud php-intl php-mcrypt php-pgsql php-xcache exiv2 php-fpm dcron ca-certificates
 
 mkdir -p /data/config
@@ -21,5 +22,6 @@ cp -v /build/initrc.d/* /etc/initrc.d
 
 rm -rf /build
 
+pacman -Rns --noconfirm $(pacman -Qqtd)
 pacman -S -cc --noconfirm
 rm -rf /var/cache/pacman/pkg
