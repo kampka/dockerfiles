@@ -3,6 +3,8 @@ set -e
 
 ln -sf /proc/self/fd /dev
 
+pacman -Sy tar --noconfirm
+yaourt -Sy base-devel --noconfirm --needed --asdeps
 yaourt -Sy python2-pip git --noconfirm
 cd /tmp
 
@@ -22,5 +24,6 @@ cp /build/config/config.yml /etc
 rm -rf /tmp/docker-registry
 rm -rf /build
 
+pacman -Rns --noconfirm $(pacman -Qqtd)
 pacman -S -cc --noconfirm
 rm -rf /var/cache/pacman/pkg
