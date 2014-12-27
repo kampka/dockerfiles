@@ -4,7 +4,12 @@ set -e
 
 [ -e /dev/fs ] || ln -sf /proc/self/fd /dev
 
-yaourt -Sy ca-certificates postgresql-libs python2-docutils gitlab --noconfirm
+pacman -Sy tar --noconfirm
+pacman -Sy base-devel --noconfirm --asdeps --needed
+yaourt -Sy ca-certificates postgresql-libs python2-docutils gitlab  --noconfirm 
+
+cd /usr/share/webapps/gitlab
+patch -p1 < /build/patches/0001-Gitlab-logging-should-honor-rails-logger-configurati.patch
 
 # disable pam authentication for sshd
 sed 's/UsePAM yes/UsePAM no/' -i /etc/ssh/sshd_config

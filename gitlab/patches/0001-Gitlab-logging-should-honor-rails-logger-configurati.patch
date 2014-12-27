@@ -1,0 +1,39 @@
+From bd20f4963b9714080b0467ee25926ec099559ed2 Mon Sep 17 00:00:00 2001
+From: Christian Kampka <christian@kampka.net>
+Date: Wed, 24 Dec 2014 00:32:16 +0100
+Subject: [PATCH] Gitlab logging should honor rails logger configurations
+
+---
+ lib/gitlab/logger.rb | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/lib/gitlab/logger.rb b/lib/gitlab/logger.rb
+index 59b2114..83a420b 100644
+--- a/lib/gitlab/logger.rb
++++ b/lib/gitlab/logger.rb
+@@ -13,6 +13,7 @@ module Gitlab
+     end
+ 
+     def self.read_latest
++      return ["Configured logger does not support replaying logs."] if defined?(Rails.application.config.logger)
+       path = Rails.root.join("log", file_name)
+       self.build unless File.exist?(path)
+       tail_output, _ = Gitlab::Popen.popen(%W(tail -n 2000 #{path}))
+@@ -20,12 +21,14 @@ module Gitlab
+     end
+ 
+     def self.read_latest_for(filename)
++      return ["Configured logger does not support replaying logs."] if defined?(Rails.application.config.logger)
+       path = Rails.root.join("log", filename)
+       tail_output, _ = Gitlab::Popen.popen(%W(tail -n 2000 #{path}))
+       tail_output.split("\n")
+     end
+ 
+     def self.build
++      return Rails.application.config.logger if defined?(Rails.application.config.logger)
+       new(Rails.root.join("log", file_name))
+     end
+   end
+-- 
+2.2.1
+
