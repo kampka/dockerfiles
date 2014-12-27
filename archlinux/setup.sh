@@ -1,7 +1,6 @@
 #!/bin/sh
 set -e
 
-sed -i "s/^CheckSpace/#CheckSpace/g" /etc/pacman.conf
 cat >>/etc/pacman.conf<< EOF
 [kampka]
 Server = http://pkg.kampka.net
@@ -11,7 +10,6 @@ EOF
 pacman-key -a /build/pacman.d/kampka.db.key
 pacman-key --lsign 10C65A0F
 pacman -Sy -qq > /dev/null
-pacman -S --noconfirm base-devel >/dev/null
 
 pacman -S --noconfirm yaourt pacaur micro-init runit >/dev/null
 

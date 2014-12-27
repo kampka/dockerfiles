@@ -1,7 +1,6 @@
-FROM base/archlinux
+FROM kampka/arch-core
 MAINTAINER Christian Kampka <christian@kampka.net>
 
-RUN mkdir /build
 ADD . /build
 
 RUN sh /build/setup.sh
