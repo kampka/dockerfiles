@@ -33,7 +33,14 @@ production: &base
     # Uncomment and customize if you can't use the default user to run GitLab (default: 'git')
     user: gitlab
 
+    ## Date & Time settings
+    # Uncomment and customize if you want to change the default time zone of GitLab application.
+    # To see all available zones, run `bundle exec rake time:zones:all RAILS_ENV=production`
+    # time_zone: 'UTC'
+
     ## Email settings
+    # Uncomment and set to false if you need to disable email sending from GitLab (default: true)
+    # email_enabled: true
     # Email address used in the "From" field in mails sent by GitLab
     email_from: {{GITLAB_EMAIL}}
 
@@ -290,3 +297,48 @@ production: &base
     # sign_in_text: |
     #   ![Company Logo](http://www.companydomain.com/logo.png)
     #   [Learn more about CompanyName](http://www.companydomain.com/)
+
+development:
+  <<: *base
+
+test:
+  <<: *base
+  gravatar:
+    enabled: true
+  gitlab:
+    host: localhost
+    port: 80
+
+    # When you run tests we clone and setup gitlab-shell
+    # In order to setup it correctly you need to specify
+    # your system username you use to run GitLab
+    # user: YOUR_USERNAME
+  satellites:
+    path: tmp/tests/gitlab-satellites/
+  gitlab_shell:
+    path: tmp/tests/gitlab-shell/
+    repos_path: tmp/tests/repositories/
+    hooks_path: tmp/tests/gitlab-shell/hooks/
+  issues_tracker:
+    redmine:
+      title: "Redmine"
+      project_url: "http://redmine/projects/:issues_tracker_id"
+      issues_url: "http://redmine/:project_id/:issues_tracker_id/:id"
+      new_issue_url: "http://redmine/projects/:issues_tracker_id/issues/new"
+  ldap:
+    enabled: false
+    servers:
+      main:
+        label: ldap
+        host: 127.0.0.1
+        port: 3890
+        uid: 'uid'
+        method: 'plain' # "tls" or "ssl" or "plain"
+        base: 'dc=example,dc=com'
+        user_filter: ''
+        group_base: 'ou=groups,dc=example,dc=com'
+        admin_group: ''
+        sync_ssh_keys: false
+
+staging:
+  <<: *base

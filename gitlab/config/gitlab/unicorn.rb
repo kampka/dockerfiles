@@ -13,8 +13,9 @@
 #
 # ENV['RAILS_RELATIVE_URL_ROOT'] = "/gitlab"
 
-# Use at least one worker per core if you're on a dedicated server,
-# more will usually help for _short_ waits on databases/caches.
+# Read about unicorn workers here:
+# http://doc.gitlab.com/ee/install/requirements.html#unicorn-workers
+#
 worker_processes {{GITLAB_UNICORN_WORKER}}
 
 # Since Unicorn is never exposed to outside clients, it does not need to
@@ -31,15 +32,15 @@ working_directory "/usr/share/webapps/gitlab" # available in 0.94.0+
 # Listen on both a Unix domain socket and a TCP port.
 # If you are load-balancing multiple Unicorn masters, lower the backlog
 # setting to e.g. 64 for faster failover.
-listen "/var/run/gitlab/gitlab.socket", :backlog => 1024
+listen "/run/gitlab/gitlab.socket", :backlog => 1024
 listen "127.0.0.1:8085", :tcp_nopush => true
 
 # nuke workers after 30 seconds instead of 60 seconds (the default)
 #
-# NOTICE: git push over http depends on this value. 
-# If you want be able to push huge amount of data to git repository over http 
-# you will have to increase this value too. 
-# 
+# NOTICE: git push over http depends on this value.
+# If you want be able to push huge amount of data to git repository over http
+# you will have to increase this value too.
+#
 # Example of output if you try to push 1GB repo to GitLab over http.
 #   -> git push http://gitlab.... master
 #
@@ -52,7 +53,7 @@ listen "127.0.0.1:8085", :tcp_nopush => true
 timeout {{GITLAB_UNICORN_TIMEOUT}}
 
 # feel free to point this anywhere accessible on the filesystem
-pid "/var/run/gitlab/unicorn.pid"
+pid "/run/gitlab/unicorn.pid"
 
 # By default, the Unicorn logger will write to stderr.
 # Additionally, some applications/frameworks log to stderr or stdout,

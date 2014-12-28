@@ -83,8 +83,8 @@ mkdir -p ${GITLAB_DATA_DIR}/gitlab/tmp
 ln -sf ${GITLAB_DATA_DIR}/gitlab/tmp /usr/share/webapps/gitlab
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/gitlab
 
-mkdir -p /var/run/gitlab
-chown -R gitlab:gitlab /var/run/gitlab
+mkdir -p /run/gitlab
+chown -R gitlab:gitlab /run/gitlab
 
 # Legacy folder setup migration
 [ -d ${GITLAB_DATA_DIR}/.ssh ] && [ ! -L ${GITLAB_DATA_DIR}/.ssh ] && mv ${GITLAB_DATA_DIR}/.ssh ${GITLAB_DATA_DIR}/gitlab/ssh
