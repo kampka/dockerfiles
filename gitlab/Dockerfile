@@ -10,4 +10,4 @@ VOLUME ["/data"]
 
 ADD ./data /data
 
-EXPOSE 22 80
+EXPOSE 22 8080

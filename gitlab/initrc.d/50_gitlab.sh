@@ -3,6 +3,7 @@
 set -e
 
 GITLAB_INSTALL_DIR="/usr/share/webapps/gitlab"
+GITLAB_SHELL_INSTALL_DIR="/usr/share/webapps/gitlab-shell"
 GITLAB_CONFIG_DIR=${GITLAB_CONFIG_DIR:-/etc/webapps/gitlab}
 GITSHELL_CONFIG_DIR=${GITSHELL_CONFIG_DIR:-/etc/webapps/gitlab-shell}
 
@@ -59,10 +60,16 @@ echo "Setting up gitlab directories."
 chown gitlab:gitlab "$GITLAB_DATA_DIR"
 mkdir -p ${GITLAB_DATA_DIR}/repositories
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/repositories
+chmod -R ug+rwX,o-rwx ${GITLAB_DATA_DIR}/repositories/
+chmod -R ug-s ${GITLAB_DATA_DIR}/repositories/
+find ${GITLAB_DATA_DIR}/repositories/ -type d -print0 | sudo xargs -0 chmod g+s
+
 mkdir -p ${GITLAB_DATA_DIR}/backup
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/backup
 mkdir -p ${GITLAB_DATA_DIR}/satellites
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/satellites
+chmod u+rwx,g=rx,o-rwx ${GITLAB_DATA_DIR}/satellites
+
 mkdir -p ${GITLAB_DATA_DIR}/repositories
 chown -R gitlab:gitlab ${GITLAB_DATA_DIR}/repositories
 
@@ -228,5 +235,32 @@ rm -rf tmp/pids/sidekiq.pid
 rm -rf tmp/sockets/gitlab.socket
 
 sudo -u gitlab -H bundle exec rake gitlab:satellites:create RAILS_ENV=production >/dev/null
+
+echo "Configuring git for the gitlab user"
+sudo -u gitlab -H "/usr/bin/git" config --global user.name  "GitLab"
+sudo -u gitlab -H "/usr/bin/git" config --global user.email "gitlab@kampka.net"
+sudo -u gitlab -H "/usr/bin/git" config --global core.autocrlf "input"
+
+echo "Creating secrets files"
+
+if [ ! -e ${GITLAB_DATA_DIR}/gitlab/gitlab_secret ]; then
+  touch ${GITLAB_DATA_DIR}/gitlab/gitlab_secret
+  chown gitlab:gitlab ${GITLAB_DATA_DIR}/gitlab/gitlab_secret
+  echo "$(uuidgen)$(date)" | base64 > ${GITLAB_DATA_DIR}/gitlab/gitlab_secret
+fi
+ln -sf ${GITLAB_DATA_DIR}/gitlab/gitlab_secret ${GITLAB_INSTALL_DIR}/.secret
+
+if [ ! -e ${GITLAB_DATA_DIR}/gitlab/gitlab_shell_secret ]; then
+  touch ${GITLAB_DATA_DIR}/gitlab/gitlab_shell_secret
+  chown gitlab:gitlab ${GITLAB_DATA_DIR}/gitlab/gitlab_shell_secret
+  echo "$(uuidgen)$(date)" | base64 > ${GITLAB_DATA_DIR}/gitlab/gitlab_shell_secret
+fi
+ln -sf ${GITLAB_DATA_DIR}/gitlab/gitlab_shell_secret ${GITLAB_INSTALL_DIR}/.gitlab_shell_secret
+ln -sf ${GITLAB_DATA_DIR}/gitlab/gitlab_shell_secret ${GITLAB_SHELL_INSTALL_DIR}/.gitlab_shell_secret
+
+echo "Rebuilding .authorized_keys file"
+
+cd ${GITLAB_INSTALL_DIR}
+sudo -u gitlab -H force=yes bundle exec rake gitlab:shell:setup RAILS_ENV=production >/dev/null
 
 echo "Init Gitlab complete"
