@@ -7,6 +7,8 @@ ln -sf /proc/self/fd /dev
 yaourt -Sy --noconfirm bind
 
 mkdir -p /data/bind/
+
+useradd --system -U -m -d /var/named named
 chown -R root:named /data/bind
 
 
