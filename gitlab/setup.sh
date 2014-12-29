@@ -26,6 +26,7 @@ cp -v /build/initrc.d/* /etc/initrc.d
 usermod -m -d /data gitlab
 passwd -d gitlab
 
+mkdir /data
 
 rm -rf /build
 

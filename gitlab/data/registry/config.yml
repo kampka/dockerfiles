@@ -1,5 +1,0 @@
-common:
-  loglevel: info
-  storage: local
-  storage_path: /data/registry/storage
-  standalone: true
