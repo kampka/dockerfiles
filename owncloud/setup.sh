@@ -5,7 +5,7 @@ set -e
 ln -sf /proc/self/fd /dev
 
 pacman -Sy --noconfirm --asdeps --needed base-devel
-yaourt -Sy --noconfirm owncloud php-intl php-mcrypt php-pgsql php-xcache exiv2 php-fpm dcron ca-certificates
+sudo -u yaourt yaourt -Sy --noconfirm owncloud php-intl php-mcrypt php-pgsql php-xcache exiv2 php-fpm dcron ca-certificates
 
 mkdir -p /data/config
 #ln -sf /data/config /usr/share/webapps/owncloud
