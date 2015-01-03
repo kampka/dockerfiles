@@ -4,8 +4,8 @@ set -e
 ln -sf /proc/self/fd /dev
 
 pacman -Sy tar --noconfirm
-yaourt -Sy base-devel --noconfirm --needed --asdeps
-yaourt -Sy python2-pip git --noconfirm
+sudo -u yaourt yaourt -Sy base-devel --noconfirm --needed --asdeps
+sudo -u yaourt yaourt -Sy python2-pip git --noconfirm
 cd /tmp
 
 git clone https://github.com/dotcloud/docker-registry.git
