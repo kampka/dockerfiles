@@ -4,7 +4,7 @@ set -e
 
 ln -sf /proc/self/fd /dev
 
-yaourt -Sy --noconfirm bind
+pacman -Sy --noconfirm bind
 
 mkdir -p /data/bind/
 
