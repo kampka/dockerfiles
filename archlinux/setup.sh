@@ -13,6 +13,9 @@ pacman -Sy -qq > /dev/null
 
 pacman -S --noconfirm yaourt pacaur micro-init runit >/dev/null
 
+useradd -M -b /tmp yaourt
+echo "yaourt ALL=(ALL) NOPASSWD: /usr/bin/pacman" >> /etc/sudoers.d/yaourt
+
 mkdir -p /etc/initrc.d
 cp -vr /build/initrc.d/* /etc/initrc.d/
 cp -vr /build/config/* /etc
