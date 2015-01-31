@@ -106,14 +106,10 @@ timeout=60
 
 export PGPASSWORD="$OWNCLOUD_DB_PASS"
 
-while ! psql -h $OWNCLOUD_DB_HOST -U $OWNCLOUD_DB_USER -d $OWNCLOUD_DB_NAME -c "" 2>/dev/null ; do
-  timeout=$((timeout-1))
-  if [ $timeout -eq 0 ]; then
-    echo "Could not connect to database. Aborting." 1>&2
-    exit 1
-  fi
-  sleep 1
-done
+if ! pg_isready -h $OWNCLOUD_DB_HOST -U $OWNCLOUD_DB_USER -d $OWNCLOUD_DB_NAME -q -t $timeout 2>/dev/null ; then
+  echo "Could not connect to database. Aborting." 1>&2
+  exit 1
+fi
 
 QUERY="SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';"
 COUNT=$(psql -h $OWNCLOUD_DB_HOST -U $OWNCLOUD_DB_USER -d $OWNCLOUD_DB_NAME -Atw -c "${QUERY}" 2>/dev/null)
@@ -234,7 +230,9 @@ done
 
 chown -R www-data:www-data ${OWNCLOUD_CONFIG_DIR}
 
-echo "Scanning files"
+echo "Removing old cron lock."
+rm -f "${OWNCLOUD_STORAGE_DIR}/cron.lock"
+
 
 echo "Scanning files. This may take a while.."
 /usr/bin/php -f ${OWNCLOUD_INSTALL_DIR}/occ files:scan --all 1>/dev/null

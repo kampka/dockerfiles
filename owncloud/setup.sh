@@ -20,6 +20,9 @@ cp -v /build/src/errorlog.php /usr/share/webapps/owncloud/lib/private/log
 mkdir -p /etc/initrc.d
 cp -v /build/initrc.d/* /etc/initrc.d
 
+mkdir -p /services
+cp -v /build/services/* /services
+
 rm -rf /build
 
 pacman -Rns --noconfirm $(pacman -Qqtd)
