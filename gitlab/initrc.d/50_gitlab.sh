@@ -189,14 +189,10 @@ timeout=60
 
 export PGPASSWORD="$POSTGRES_DATABASE_PASSWORD"
 
-while ! psql -h $POSTGRES_DATABASE_HOST -U $POSTGRES_DATABASE_USER -d $POSTGRES_DATABASE_NAME -c "" 2>/dev/null ; do
-  timeout=$((timeout-1))
-  if [ $timeout -eq 0 ]; then
-    echo "Could not connect to database. Aborting." 1>&2
-    exit 1
-  fi
-  sleep 1
-done
+if ! pg_isready -h $POSTGRES_DATABASE_HOST -U $POSTGRES_DATABASE_USER -d $POSTGRES_DATABASE_NAME -t $timeout -q  2>/dev/null ; then
+  echo "Could not connect to database. Aborting." 1>&2
+  exit 1
+fi
 
 QUERY="SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';"
 COUNT=$(psql -h $POSTGRES_DATABASE_HOST -U $POSTGRES_DATABASE_USER -d $POSTGRES_DATABASE_NAME -Atw -c "${QUERY}" 2>/dev/null)
