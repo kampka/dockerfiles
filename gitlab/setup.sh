@@ -6,7 +6,8 @@ set -e
 
 pacman -Sy tar --noconfirm
 pacman -Sy base-devel --noconfirm --asdeps --needed
-sudo -u yaourt yaourt -Sy ca-certificates postgresql-libs python2-docutils gitlab --noconfirm
+sudo -u yaourt yaourt -Sy --aur --noconfirm ruby-2.1
+sudo -u yaourt yaourt -Sy --needed ca-certificates postgresql-libs python2-docutils gitlab --noconfirm
 
 cd /usr/share/webapps/gitlab
 patch -p1 < /build/patches/0001-Gitlab-logging-should-honor-rails-logger-configurati.patch
