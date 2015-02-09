@@ -21,7 +21,7 @@ mkdir -p /etc/initrc.d
 cp -v /build/initrc.d/* /etc/initrc.d
 
 mkdir -p /services
-cp -v /build/services/* /services
+cp -rv /build/services/* /services
 
 rm -rf /build
 
