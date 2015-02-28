@@ -15,8 +15,6 @@ cp -rv /build/config/php /etc
 cp -rv /build/config/owncloud/* /etc/webapps/owncloud/config
 cp -rv /build/config/cron/* /etc/cron.d
 
-cp -v /build/src/errorlog.php /usr/share/webapps/owncloud/lib/private/log
-
 mkdir -p /etc/initrc.d
 cp -v /build/initrc.d/* /etc/initrc.d
 

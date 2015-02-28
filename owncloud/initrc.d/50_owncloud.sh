@@ -128,7 +128,7 @@ if [ -z "${COUNT}" -o ${COUNT} -eq 0 ]; then
 
   cd ${OWNCLOUD_INSTALL_DIR}
   php -f index.php
-  
+
   PWSALT=$(php -r "include('${OWNCLOUD_CONFIG_DIR}/config.php'); echo \$CONFIG['passwordsalt'];")
   INSTANCE=$(php -r "include('${OWNCLOUD_CONFIG_DIR}/config.php'); echo \$CONFIG['instanceid'];")
 
@@ -203,13 +203,7 @@ sed -i 's/{{OWNCLOUD_SESSION_KEEPALIVE}}/'"${OWNCLOUD_SESSION_KEEPALIVE}"'/g' "$
 
 
 VERSION=$(php -r "include('${OWNCLOUD_INSTALL_DIR}/version.php'); echo implode(\$OC_Version, '.');")
-if [ -e ${OWNCLOUD_DATA_DIR}/OWNCLOUD_VERSION ]; then
-  INSTALLED_VERSION=$(cat ${OWNCLOUD_DATA_DIR}/OWNCLOUD_VERSION)
-  if [ "$VERSION" != "$INSTALLED_VERSION" ]; then
-    echo "Migrating owncloud from version $INSTALLED_VERSION to version $VERSION"
-    php ${OWNCLOUD_INSTALL_DIR}/occ upgrade
-  fi
-fi
+
 cat > /data/config/00_version.php <<EOF
 <?php
 
@@ -229,6 +223,14 @@ for f in ${OWNCLOUD_DATA_DIR}/config/*.php; do
 done
 
 chown -R www-data:www-data ${OWNCLOUD_CONFIG_DIR}
+
+if [ -e ${OWNCLOUD_DATA_DIR}/OWNCLOUD_VERSION ]; then
+  INSTALLED_VERSION=$(cat ${OWNCLOUD_DATA_DIR}/OWNCLOUD_VERSION)
+  if [ "$VERSION" != "$INSTALLED_VERSION" ]; then
+    echo "Migrating owncloud from version $INSTALLED_VERSION to version $VERSION"
+    php ${OWNCLOUD_INSTALL_DIR}/occ upgrade
+  fi
+fi
 
 echo "Removing old cron lock."
 rm -f "${OWNCLOUD_STORAGE_DIR}/cron.lock"
