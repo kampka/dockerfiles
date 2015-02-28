@@ -26,7 +26,8 @@ OWNCLOUD_THIRD_PARTY_ROOT=${OWNCLOUD_THIRD_PARTY_ROOT:-}
 OWNCLOUD_THIRD_PARTY_URL=${OWNCLOUD_THIRD_PARTY_URL:-}
 OWNCLOUD_DEFAULT_APP=${OWNCLOUD_DEFAULT_APP:-file}
 OWNCLOUD_APPSTORE_ENABLED=${OWNCLOUD_APPSTORE_ENABLED:-true}
-OWNCLOUD_APPS_DIR=${OWNCLOUD_APPS_DIR:-${OWNCLOUD_DATA_DIR}/apps}
+OWNCLOUD_USER_APPS_DIR=${OWNCLOUD_USER_APPS_DIR:-${OWNCLOUD_DATA_DIR}/apps}
+OWNCLOUD_APPS_DIR=${OWNCLOUD_APPS_DIR:-/tmp/owncloud_apps}
 OWNCLOUD_STORAGE_DIR=${OWNCLOUD_STORAGE_DIR:-${OWNCLOUD_DATA_DIR}/storage}
 
 
@@ -82,9 +83,14 @@ chown -R www-data:www-data ${OWNCLOUD_DATA_DIR}/log/owncloud
 mkdir -p ${OWNCLOUD_DATA_DIR}/config
 chown -R www-data:www-data ${OWNCLOUD_DATA_DIR}/config
 
-mkdir -p ${OWNCLOUD_DATA_DIR}/apps
-cp -r ${OWNCLOUD_INSTALL_DIR}/apps/* ${OWNCLOUD_DATA_DIR}/apps
-chown -R www-data:www-data ${OWNCLOUD_DATA_DIR}/apps
+mkdir -p ${OWNCLOUD_APPS_DIR}
+cp -r ${OWNCLOUD_INSTALL_DIR}/apps/* ${OWNCLOUD_APPS_DIR}
+mkdir -p ${OWNCLOUD_USER_APPS_DIR}
+for d in $(ls -A ${OWNCLOUD_USER_APPS_DIR}); do
+  cp -r "${OWNCLOUD_USER_APPS_DIR}/$d" ${OWNCLOUD_APPS_DIR}
+done
+
+chown -R www-data:www-data ${OWNCLOUD_APPS_DIR}
 
 
 # Configure php-fpm
@@ -228,7 +234,7 @@ if [ -e ${OWNCLOUD_DATA_DIR}/OWNCLOUD_VERSION ]; then
   INSTALLED_VERSION=$(cat ${OWNCLOUD_DATA_DIR}/OWNCLOUD_VERSION)
   if [ "$VERSION" != "$INSTALLED_VERSION" ]; then
     echo "Migrating owncloud from version $INSTALLED_VERSION to version $VERSION"
-    php ${OWNCLOUD_INSTALL_DIR}/occ upgrade
+    sudo -u www-data php ${OWNCLOUD_INSTALL_DIR}/occ upgrade
   fi
 fi
 
@@ -237,6 +243,6 @@ rm -f "${OWNCLOUD_STORAGE_DIR}/cron.lock"
 
 
 echo "Scanning files. This may take a while.."
-/usr/bin/php -f ${OWNCLOUD_INSTALL_DIR}/occ files:scan --all 1>/dev/null
+sudo -u www-data /usr/bin/php -f ${OWNCLOUD_INSTALL_DIR}/occ files:scan --all 1>/dev/null
 
 echo "Init complete"
