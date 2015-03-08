@@ -5,5 +5,7 @@ ADD . /build
 
 RUN sh /build/setup.sh
 
+ENV SVDIR /services
 ENTRYPOINT ["/usr/bin/minit"]
 CMD ["/usr/bin/runsvdir", "-P", "/services"]
+
