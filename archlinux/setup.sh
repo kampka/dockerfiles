@@ -26,6 +26,10 @@ yaourt -Syu --noconfirm
 
 mkdir /services
 
+echo "*             soft    nofile          524288"  >> /etc/security/limits.conf
+echo "*             hard    nofile          1048576" >> /etc/security/limits.conf
+
+
 rm -rf /var/cache/pacman/pkg/*
 rm -rf /build
 
