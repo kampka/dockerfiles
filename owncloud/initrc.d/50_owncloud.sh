@@ -120,6 +120,7 @@ fi
 QUERY="SELECT count(*) FROM information_schema.tables WHERE table_schema = 'public';"
 COUNT=$(psql -h $OWNCLOUD_DB_HOST -U $OWNCLOUD_DB_USER -d $OWNCLOUD_DB_NAME -Atw -c "${QUERY}" 2>/dev/null)
 
+
 if [ -z "${COUNT}" -o ${COUNT} -eq 0 ]; then
   echo "Setting up Owncloud database."
   cp ${OWNCLOUD_CONFIG_DIR}/autoconfig.php.tmpl ${OWNCLOUD_CONFIG_DIR}/autoconfig.php
@@ -131,12 +132,14 @@ if [ -z "${COUNT}" -o ${COUNT} -eq 0 ]; then
   sed -i 's/{{OWNCLOUD_DB_PREFIX}}/'"${OWNCLOUD_DB_PREFIX}"'/g' "${OWNCLOUD_CONFIG_DIR}/autoconfig.php"
   sed -i 's/{{OWNCLOUD_DB_ADMIN_USER}}/'"${OWNCLOUD_DB_ADMIN_USER}"'/g' "${OWNCLOUD_CONFIG_DIR}/autoconfig.php"
   sed -i 's/{{OWNCLOUD_DB_ADMIN_PASS}}/'"${OWNCLOUD_DB_ADMIN_PASS}"'/g' "${OWNCLOUD_CONFIG_DIR}/autoconfig.php"
+  sed -i 's,{{OWNCLOUD_STORAGE_DIR}},'"${OWNCLOUD_STORAGE_DIR}"',g' "${OWNCLOUD_CONFIG_DIR}/autoconfig.php"
 
   cd ${OWNCLOUD_INSTALL_DIR}
   php -f index.php
 
   PWSALT=$(php -r "include('${OWNCLOUD_CONFIG_DIR}/config.php'); echo \$CONFIG['passwordsalt'];")
   INSTANCE=$(php -r "include('${OWNCLOUD_CONFIG_DIR}/config.php'); echo \$CONFIG['instanceid'];")
+  SECRET=$(php -r "include('${OWNCLOUD_CONFIG_DIR}/config.php'); echo \$CONFIG['secret'];")
 
   mkdir -p /data/config/
   cat > /data/config/00_instance.php <<EOF
@@ -148,6 +151,7 @@ if [ -z "${COUNT}" -o ${COUNT} -eq 0 ]; then
 \$CONFIG = array_merge(\$CONFIG, array(
   'passwordsalt' => '$PWSALT',
   'instanceid' => '$INSTANCE',
+  'secret' => '$SECRET',
 ));
 EOF
 
@@ -242,7 +246,7 @@ echo "Removing old cron lock."
 rm -f "${OWNCLOUD_STORAGE_DIR}/cron.lock"
 
 
-echo "Scanning files. This may take a while.."
-sudo -u www-data /usr/bin/php -f ${OWNCLOUD_INSTALL_DIR}/occ files:scan --all 1>/dev/null
+#echo "Scanning files. This may take a while.."
+#sudo -u www-data /usr/bin/php -f ${OWNCLOUD_INSTALL_DIR}/occ files:scan --all 1>/dev/null
 
 echo "Init complete"
