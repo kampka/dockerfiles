@@ -5,7 +5,7 @@ set -e
 [ -e /dev/fs ] || ln -sf /proc/self/fd /dev
 
 pacman -Sy tar --noconfirm
-pacman -Sy base-devel --noconfirm --asdeps --needed
+pacman -Sy base-devel nodejs --noconfirm --asdeps --needed
 sudo -u yaourt yaourt -Sy --aur --noconfirm ruby-2.1
 sudo -u yaourt yaourt -Sy --needed ca-certificates postgresql-libs python2-docutils gitlab --noconfirm
 
