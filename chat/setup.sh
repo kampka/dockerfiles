@@ -4,7 +4,8 @@ set -e
 
 [ -e /dev/fs ] || ln -sf /proc/self/fd /dev
 
-pacman -Sy --noconfirm znc bitlbee-libpurple
+pacman -Sy
+pacman -Sy --noconfirm znc bitlbee-libpurple libotr
 
 usermod -d /data/znc znc
 usermod -d /data/bitlbee bitlbee
