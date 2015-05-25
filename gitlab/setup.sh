@@ -5,9 +5,9 @@ set -e
 [ -e /dev/fs ] || ln -sf /proc/self/fd /dev
 
 pacman -Sy tar --noconfirm
-pacman -Sy base-devel nodejs --noconfirm --asdeps --needed
-sudo -u yaourt yaourt -Sy --aur --noconfirm ruby-2.1
-sudo -u yaourt yaourt -Sy --needed ca-certificates postgresql-libs python2-docutils gitlab --noconfirm procps-ng
+pacman -Sy base-devel nodejs procps-ng ruby-2.1 ca-certificates postgresql-libs python2-docutils --noconfirm --asdeps --needed
+
+pacman -Sy --noconfirm --needed gitlab
 
 cd /usr/share/webapps/gitlab
 patch -p1 < /build/patches/0001-Gitlab-logging-should-honor-rails-logger-configurati.patch
