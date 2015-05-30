@@ -15,4 +15,5 @@ exec 2>&1 \
     -q gitlab_shell \
     -q common \
     -q default \
+    -q archive_repo \
     -q $SIDEKIQ_CONCURRENCY

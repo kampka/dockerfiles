@@ -4,10 +4,13 @@ set -e
 
 [ -e /dev/fs ] || ln -sf /proc/self/fd /dev
 
-pacman -Sy tar --noconfirm
-pacman -Sy base-devel nodejs procps-ng ruby-2.1 ca-certificates postgresql-libs python2-docutils --noconfirm --asdeps --needed
+# Needed for the install files, will be removed again later
+pacman -Sy --noconfirm systemd
 
-pacman -Sy --noconfirm --needed gitlab
+pacman -Sy tar --noconfirm --needed
+pacman -Sy base-devel nodejs --noconfirm --asdeps --needed
+
+pacman -Sy --noconfirm --needed procps-ng ruby-2.1 ca-certificates postgresql-libs python2-docutils gitlab
 
 cd /usr/share/webapps/gitlab
 patch -p1 < /build/patches/0001-Gitlab-logging-should-honor-rails-logger-configurati.patch
@@ -31,6 +34,7 @@ mkdir -p /data
 
 rm -rf /build
 
+pacman -Rns --noconfirm systemd
 pacman -Rns --noconfirm $(pacman -Qqtd)
 pacman -S -cc --noconfirm
 rm -rf /var/cache/pacman/pkg
