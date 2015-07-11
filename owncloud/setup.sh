@@ -21,6 +21,8 @@ cp -v /build/initrc.d/* /etc/initrc.d
 mkdir -p /services
 cp -rv /build/services/* /services
 
+rm /usr/share/webapps/owncloud/.user.ini
+
 rm -rf /build
 
 pacman -Rns --noconfirm $(pacman -Qqtd)
